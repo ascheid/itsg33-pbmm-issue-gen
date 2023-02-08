@@ -38,7 +38,7 @@ runs:
           title = "{}-{} {}".format(row[0], row[1], row[3])
           body = "{}".format(row[5])
           labels = ["ITSG33"]
-          json = {"title": title, "body": body, "labels": labels}
+          json = '{"title": {}, "body": {}, "labels": {}}'.format(title, body, labels)
           r = requests.post(url, data=json, headers=header)
           print(r.text)
       shell: python
