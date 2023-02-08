@@ -1,0 +1,23 @@
+import csv
+import requests
+import json
+
+with open('controls.csv', 'r') as file:
+    reader = csv.reader(file)
+    next(reader)
+    for row in reader:
+        #url = "https://api.github.com/repos/cds-snc/${{ inputs.repo }}/issues"
+        url = "https://api.github.com/repos/ascheid/itsg33-pbmm-issue-gen/issues"
+        header = { 
+            "Accept": "application/vnd.github+json",
+            "Authorization": "Bearer ${{ inputs.token }}",
+            "X-GitHub-Api-Version": "2022-11-28"
+        }
+        json_object = {
+            "title": "{}-{} {}".format(row[0], row[1], row[3]),
+            "body": "{}".format(row[5]),
+            "labels": ["Priority: {}".format(row[15])]
+        }
+        #response = requests.post(url, json=json_object, headers=header)
+        print(json.dumps(json_object, indent=4))
+        break # remove this line to create issues
