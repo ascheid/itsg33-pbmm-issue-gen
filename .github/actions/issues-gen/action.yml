@@ -27,8 +27,7 @@ runs:
         with open('controls.csv', 'r') as file:
           reader = csv.reader(file)
           next(reader)
-          next(reader)
-          row = reader[0]
+          row = next(reader)
           #for row in reader:
             #print(', '.join(row))
           url = "https://api.github.com/repos/ascheid/itsg33-pbmm-issue-gen/issues"
