@@ -40,6 +40,7 @@ runs:
             "body": "{}".format(row[5])
           }
           print(json_object)
+          print(header)
           r = requests.post(url, data=json_object, headers=header)
           print(r.text)
       shell: python
