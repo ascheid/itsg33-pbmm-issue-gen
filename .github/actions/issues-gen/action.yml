@@ -12,11 +12,15 @@ runs:
     - name: Checkout Code
       uses: actions/checkout@v2
       
-    - name: Upload SBOM
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+        
+    - name: Print CSV
       run: |
-        curl \
-          -H 'Accept: application/vnd.github+json' \
-          -H 'Authorization: token ${{ inputs.token }}' \
-          'https://api.github.com/repos/'$GITHUB_REPOSITORY'/dependency-graph/snapshots' \
-          -d @dependency-results.sbom.json
-      shell: bash
+        python -c "import csv
+                  with open('controls.csv', 'r') as file:
+                      reader = csv.reader(file)
+                      for row in reader:
+                          print(', '.join(row))"
