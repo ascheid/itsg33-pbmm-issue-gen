@@ -12,32 +12,7 @@ runs:
     - name: Checkout Code
       uses: actions/checkout@v2
       
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.9
-        
-    - run: pip install requests
-      shell: bash
-      
-    - name: Print CSV
+    - name: Run python script to create gh issues
       run: |
-        import csv
-        import requests
-        with open('controls.csv', 'r') as file:
-          reader = csv.reader(file)
-          next(reader)
-          for row in reader:
-            url = "https://api.github.com/repos/ascheid/itsg33-pbmm-issue-gen/issues"
-            header = { "Accept": "application/vnd.github+json",
-                     "Authorization": "Bearer ${{ inputs.token }}",
-                     "X-GitHub-Api-Version": "2022-11-28"
-            }
-            json_object = {
-              "title": "{}-{} {}".format(row[0], row[1], row[3]),
-              "body": "{}".format(row[5]),
-              "labels": ["Priority: {}".format(row[15])]
-            }
-            r = requests.post(url, json=json_object, headers=header)
-            print(r.text)
-      shell: python
+        make install
+        make
