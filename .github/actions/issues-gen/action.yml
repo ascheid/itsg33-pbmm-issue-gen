@@ -24,3 +24,4 @@ runs:
                       reader = csv.reader(file)
                       for row in reader:
                           print(', '.join(row))"
+      shell: bash
