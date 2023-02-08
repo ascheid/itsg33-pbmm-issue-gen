@@ -1,0 +1,22 @@
+name: "Generate github issues"
+description: "generate github issues from csv"
+
+inputs:
+  token:
+    description: "Token for allowing the action to create issues"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+      
+    - name: Upload SBOM
+      run: |
+        curl \
+          -H 'Accept: application/vnd.github+json' \
+          -H 'Authorization: token ${{ inputs.token }}' \
+          'https://api.github.com/repos/'$GITHUB_REPOSITORY'/dependency-graph/snapshots' \
+          -d @dependency-results.sbom.json
+      shell: bash
