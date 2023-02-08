@@ -14,6 +14,6 @@ jobs:
         uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
 
       - name: call issues 
-        - uses: ./.github/actions/issues-gen
+        uses: ./.github/actions/issues-gen
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
