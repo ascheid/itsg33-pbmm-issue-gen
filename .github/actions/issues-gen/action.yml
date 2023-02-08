@@ -20,9 +20,22 @@ runs:
     - name: Print CSV
       run: |
         import csv
+        import requests
         with open('controls.csv', 'r') as file:
           reader = csv.reader(file)
           next(reader)
-          for row in reader:
-            print(', '.join(row))
+          next(reader)
+          #for row in reader:
+            #print(', '.join(row))
+          url = "https://api.github.com/repos/ascheid/itsg33-pbmm-issue-gen/issues"
+          header = { "Accept": "application/vnd.github+json",
+                     "Authorization": "Bearer ${{ inputs.token }}",
+                     "X-GitHub-Api-Version": "2022-11-28"
+          }
+          title = "{}-{} {}".format(row[0], row[1], row[3])
+          body = "{}".format(row[5])
+          labels = ["ITSG33"]
+          json = {"title": title, "body": body, "labels": labels}
+          r = requests.post(url, data=json, headers=headers)
+          print(r.text)
       shell: python
