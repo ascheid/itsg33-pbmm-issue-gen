@@ -37,7 +37,7 @@ runs:
           }
           json_object = {
             "title": "{}-{} {}".format(row[0], row[1], row[3]),
-            "body": "{}".format(row[5])
+            "body": "test"
           }
           print(json_object)
           print(header)
