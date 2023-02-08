@@ -35,10 +35,11 @@ runs:
                      "Authorization": "Bearer ${{ inputs.token }}",
                      "X-GitHub-Api-Version": "2022-11-28"
           }
-          title = "{}-{} {}".format(row[0], row[1], row[3])
-          body = "{}".format(row[5])
-          labels = ["ITSG33"]
-          json = '{"title": {}, "body": {}, "labels": {}}'.format(title, body, labels)
-          r = requests.post(url, data=json, headers=header)
+          json_object = {
+            "title": "{}-{} {}".format(row[0], row[1], row[3]),
+            "body": "{}".format(row[5]),
+            "labels": ["ITSG33"]
+          }
+          r = requests.post(url, data=json_object, headers=header)
           print(r.text)
       shell: python
