@@ -37,10 +37,10 @@ runs:
           }
           json_object = {
             "title": "{}-{} {}".format(row[0], row[1], row[3]),
-            "body": "test"
+            "body": "{}".format(row[5])
           }
           print(json_object)
           print(header)
-          r = requests.post(url, data=json_object, headers=header)
+          r = requests.post(url, json=json_object, headers=header)
           print(r.text)
       shell: python
