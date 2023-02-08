@@ -37,8 +37,7 @@ runs:
           }
           json_object = {
             "title": "{}-{} {}".format(row[0], row[1], row[3]),
-            "body": "{}".format(row[5]),
-            "labels": ["ITSG33"]
+            "body": "{}".format(row[5])
           }
           r = requests.post(url, data=json_object, headers=header)
           print(r.text)
