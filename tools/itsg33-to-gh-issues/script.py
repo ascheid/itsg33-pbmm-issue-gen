@@ -26,4 +26,5 @@ with open('controls.csv', 'r') as file:
         print("github_token: {}".format(GITHUB_TOKEN))
         print("headers: {}".format(header))
         print(json.dumps(json_object, indent=4))
+        print("response: {}".format(response.text))
         break # remove this line to create issues
