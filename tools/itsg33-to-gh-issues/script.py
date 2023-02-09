@@ -22,6 +22,8 @@ with open('controls.csv', 'r') as file:
             "labels": ["Priority: {}".format(row[15])]
         }
         response = requests.post(url, json=json_object, headers=header)
-        print(response.text)
+        print("repo: {}".format(REPO))
+        print("github_token: {}".format(GITHUB_TOKEN))
+        print("headers: {}".format(header))
         print(json.dumps(json_object, indent=4))
         break # remove this line to create issues
