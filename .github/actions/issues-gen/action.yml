@@ -16,7 +16,8 @@ runs:
       working-directory: ./tools/itsg33-to-gh-issues
       env:
         GITHUB_TOKEN: ${{ inputs.token }}
-        REPO: ${{ GITHUB_REPOSITORY }}
+        REPO: ${{ env.GITHUB_REPOSITORY }}
       run: |
         make install
         make
+      shell: bash
