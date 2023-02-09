@@ -27,4 +27,5 @@ with open('controls.csv', 'r') as file:
         print("headers: {}".format(header))
         print(json.dumps(json_object, indent=4))
         print("response: {}".format(response.text))
+        print("status_code: {}".format(response.status_code))
         break # remove this line to create issues
