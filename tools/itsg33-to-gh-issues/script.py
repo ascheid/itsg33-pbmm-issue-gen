@@ -1,6 +1,10 @@
 import csv
 import requests
 import json
+import os
+
+REPO = os.getenv("REPO")
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 
 with open('controls.csv', 'r') as file:
     reader = csv.reader(file)
