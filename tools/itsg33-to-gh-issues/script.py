@@ -10,7 +10,7 @@ with open('controls.csv', 'r') as file:
     reader = csv.reader(file)
     next(reader)
     for row in reader:
-        url = "https://api.github.com/repos/cds-snc/{}/issues".format(REPO)
+        url = "https://api.github.com/repos/{}/issues".format(REPO)
         header = { 
             "Accept": "application/vnd.github+json",
             "Authorization": "Bearer {}".format(GITHUB_TOKEN),
