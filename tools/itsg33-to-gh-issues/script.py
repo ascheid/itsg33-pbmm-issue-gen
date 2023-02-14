@@ -1,3 +1,9 @@
+"""
+The purpose of this script is to take the CSV file with the ITSG-33 controls and create issues in github for each control.
+The script will create the issue title, body, and labels. The body will have the control definition, class, supplemental guidance,
+ references, general guide, suggested placeholder values, profile specific notes, suggested assignment, and support teams.
+"""
+
 import csv
 import requests
 import json
@@ -45,39 +51,56 @@ LABELS = {
 
 
 def main():
-    """
-    1. Read controls.csv
-    2. Create issues in github
-    """
     for row in get_controls(CSV_FILE):
-        # create json object
-        json_object = {
-            "title": "{}-{} {}".format(control[0], control[1], control[3]),
-            "body": "{}".format(control[5]),
-            "labels": ["Priority: {}".format(control[15])]
-        }
-        # create issue
+        issues_url = gh_issues_url()
+        headers = get_header()
+        issues_json = get_issues_json(row)
+        
+        response = requests.post(issues_url, headers=headers, json=issues_json)
+        if response.status_code == 201:
+            print("Created issue for control: {}".format(issues_json["title"]))
+        else:
+            print("Failed to create issue for control: {}".format(issues_json["title"]))
+            print("Response: {}".format(response.text))
+
         if DEBUG:
-            print("control: {}".format(control))
-            break
-        pass
+            print("Issues URL: {}".format(issues_url))
+            print("Issues JSON: {}".format(issues_json))
+            print("Response: {}".format(response.text))
+            print("Headers: {}".format(headers))
+
 
 def get_github_token():
+    """
+    Get github token from env var
+    """
     if GITHUB_TOKEN:
         return GITHUB_TOKEN
     else:
         raise Exception("GITHUB_TOKEN env var not set")
     
+    
 def get_repo():
+    """
+    Get repo from env var
+    """
     if REPO:
         return REPO
     else:
         raise Exception("REPO env var not set")
     
+
 def gh_issues_url():
+    """
+    Get github issues url
+    """
     return "https://api.github.com/repos/{}/issues".format(get_repo())
 
+
 def get_header():
+    """
+    Get header for github api
+    """
     header = {
         "Accept": "application/vnd.github+json",
         "Authorization": "Bearer {}".format(get_github_token()),
@@ -85,12 +108,21 @@ def get_header():
     }
     return header
 
+
 def get_issues_json(row):
+    """
+    Get issues json to have the required and relevant fields
+    """
     title = get_title(row)
     body = get_body(row)
     labels = get_labels(row)
+    return {"title": title, "body": body, "labels": labels}
+
 
 def get_body(row):
+    """
+    Get body for issue. Has at least the control definition.
+    """
     body = "# Control Definition\n{}\n\n".format(row[CONTROL_DEFINITION])
     if row[CONTROL_CLASS]:
         body += "# Class\n{}\n\n".format(row[CONTROL_CLASS])
@@ -110,7 +142,11 @@ def get_body(row):
         body += "# Support Teams\n{}\n\n".format(get_support_teams(row))
     return body
 
+
 def get_labels(row):
+    """
+    Get labels for issue to help future retrieval
+    """
     labels = []
     if row[SUGGESTED_PRIORITY]:
         labels.append("Priority: {}".format(row[SUGGESTED_PRIORITY]))
@@ -124,12 +160,20 @@ def get_labels(row):
         labels.append("Suggested Assignment: {}".format(get_suggested_assignment(row)))
     return labels
 
+
 def get_suggested_assignment(row):
+    """
+    Get suggested assignment for issue by looking up in the fields who has the "R" (Responsible)
+    """
     for i in range(8, 14):
         if row[i] == "R":
             return LABELS[i]
 
+
 def get_support_teams(row):
+    """
+    Get support teams for issue by looking up in the fields who has the "S" (Support)
+    """
     teams = []
     for i in range(8, 14):
         if row[i] == "S":
@@ -140,6 +184,10 @@ def get_support_teams(row):
     
 
 def get_title(row):
+    """
+    Get title for issue. The logic required is encapsulated in this function. Some controls have enhancements, and if they do,
+    the title should be formatted to show such info.
+    """
     title = ""
     if row[ENHANCEMENT]:
         title = "{}-{}({}): {}".format(row[FAMILY], row[CONTROL_ID], row[ENHANCEMENT], string.capwords(row[CONTROL_NAME]))
@@ -147,34 +195,15 @@ def get_title(row):
         title = "{}-{}: {}".format(row[FAMILY], row[CONTROL_ID], string.capwords(row[CONTROL_NAME]))
     return title
     
+
 def get_controls(CSV_FILE):
+    """
+    Get controls from csv file and jumps the header.
+    """
     reader = csv.reader(CSV_FILE)
     next(reader)
     return reader
 
 
-
-
-with open('controls.csv', 'r') as file:
-    reader = csv.reader(file)
-    next(reader)
-    for row in reader:
-        url = "https://api.github.com/repos/{}/issues".format(REPO)
-        header = { 
-            "Accept": "application/vnd.github+json",
-            "Authorization": "Bearer {}".format(GITHUB_TOKEN),
-            "X-GitHub-Api-Version": "2022-11-28"
-        }
-        json_object = {
-            "title": "{}-{} {}".format(row[0], row[1], row[3]),
-            "body": "{}".format(row[5]),
-            "labels": ["Priority: {}".format(row[15])]
-        }
-        response = requests.post(url, json=json_object, headers=header)
-        print("repo: {}".format(REPO))
-        print("github_token: {}".format(GITHUB_TOKEN))
-        print("headers: {}".format(header))
-        print(json.dumps(json_object, indent=4))
-        print("response: {}".format(response.text))
-        print("status_code: {}".format(response.status_code))
-        break # remove this line to create issues
+if __name__ == "__main__":
+    main()
