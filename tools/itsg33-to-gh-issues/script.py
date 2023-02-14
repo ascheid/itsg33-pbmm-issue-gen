@@ -47,11 +47,10 @@ LABELS = {
         12: "Personnel Security Group", 
         13: "Learning Center"
 }
-###
 
 
 def main():
-    for row in get_controls(CSV_FILE):
+    for row in get_controls():
         issues_url = gh_issues_url()
         headers = get_header()
         issues_json = get_issues_json(row)
@@ -196,13 +195,23 @@ def get_title(row):
     return title
     
 
-def get_controls(CSV_FILE):
+def get_controls():
     """
     Get controls from csv file and jumps the header.
     """
-    reader = csv.reader(CSV_FILE)
-    next(reader)
-    return reader
+    rows = []
+    with open(CSV_FILE, 'r') as file:
+        reader = csv.reader(file)
+        
+        if next(reader)[0] != "Family":
+            raise Exception("Headers different than expected")
+        
+        for row in reader:
+            rows.append(row)
+        
+        if rows.count < 2:
+            raise Exception("No controls found in csv file")
+    return rows
 
 
 if __name__ == "__main__":
