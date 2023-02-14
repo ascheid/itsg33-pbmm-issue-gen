@@ -50,23 +50,34 @@ LABELS = {
 
 
 def main():
+    
     for row in get_controls():
+
         issues_url = gh_issues_url()
         headers = get_header()
         issues_json = get_issues_json(row)
         
-        response = requests.post(issues_url, headers=headers, json=issues_json)
-        if response.status_code == 201:
-            print("Created issue for control: {}".format(issues_json["title"]))
-        else:
-            print("Failed to create issue for control: {}".format(issues_json["title"]))
-            print("Response: {}".format(response.text))
+        response = post_request(issues_url, headers, issues_json)
 
         if DEBUG:
             print("Issues URL: {}".format(issues_url))
             print("Issues JSON: {}".format(issues_json))
             print("Response: {}".format(response.text))
             print("Headers: {}".format(headers))
+
+
+def post_request(issues_url, headers, issues_json):
+    """
+    Post request to github api to create issue. If successful, print the control title. 
+    If not, print the control title and the response. Return the response.
+    """
+    response = requests.post(issues_url, headers=headers, json=issues_json)
+    if response.status_code == 201:
+        print("Created issue for control: {}".format(issues_json["title"]))
+    else:
+        print("Failed to create issue for control: {}".format(issues_json["title"]))
+        print("Response: {}".format(response.text))
+    return response
 
 
 def get_github_token():
