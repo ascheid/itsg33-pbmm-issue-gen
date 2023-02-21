@@ -14,6 +14,6 @@ jobs:
         uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
 
       - name: call issues 
-        uses: cds-snc/security-tools/.github/actions/security-controls/action.yml@feat/sec-controls-action
+        uses: cds-snc/security-tools/.github/actions/security-controls@feat/sec-controls-action
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
