@@ -1,0 +1,12 @@
+on:
+  issues:
+    types: [opened]
+jobs:
+  titlePrefixCheck:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Close Issue
+        uses: peter-evans/close-issue@v3
+        with:
+          comment: |
+            Auto-closing this issue.
