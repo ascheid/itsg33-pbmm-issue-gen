@@ -1,0 +1,16 @@
+name: Create issues
+on:
+  workflow_dispatch:
+  
+permissions:
+  id-token: write
+  issues: write
+
+jobs:
+  create-issues:
+    runs-on: ubuntu-latest
+    steps:
+      - name: call issues 
+        uses: cds-snc/security-tools/.github/actions/security-controls@main
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
